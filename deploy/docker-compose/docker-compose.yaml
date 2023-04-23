@@ -1,0 +1,32 @@
+version: '3'
+volumes:
+  openapi.bittrace.proj:
+networks:
+  openapi_network.bittrace.proj:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.31.0.0/24
+services:
+  openapi:
+    image: ${IMAGE:-bittrace/openapi:latest}
+    container_name: openapi.bittrace.proj
+    hostname: openapi.bittrace.proj
+    labels:
+      service: openapi.bittrace.proj
+    restart: on-failure
+#    environment:
+#      - "MODULE=receiver"
+    volumes:
+      - /root/.bittrace:/root/.bittrace # 这里是绝对目录映射
+    ports:
+      - '6060:6060'
+    networks:
+      openapi_network.bittrace.proj:
+        ipv4_address: 172.31.0.10
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 100000
+        hard: 200000

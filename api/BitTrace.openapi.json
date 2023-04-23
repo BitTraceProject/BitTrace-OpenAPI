@@ -1,0 +1,1300 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BitTrace",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "openapi"
+    },
+    {
+      "name": "openapi/v1"
+    }
+  ],
+  "paths": {
+    "/openapi/v1/snapshot": {
+      "get": {
+        "summary": "Snapshot",
+        "x-apifox-folder": "openapi/v1",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "（1）本接口支持通过4种索引方式来查询Snapshot，4种方式互斥。未设置索引方式时，默认采用by_snapshot_id。设置了多种方式时，按照优先级大小排序依次为by_snapshot_id，by_timestamp_range，by_block_hash和by_chain_info。\n（2）3种索引方式具有不同的查询参数，请查看下方文档正确设置。\n（3）本接口支持分页返回，可设置page_size和page_number选择返回的数据页码和条数。",
+        "tags": [
+          "openapi/v1"
+        ],
+        "parameters": [
+          {
+            "name": "peer_tag",
+            "in": "query",
+            "description": "数据采集节点某一系列数据表的唯一标识，通过查询 peer 接口获取",
+            "required": true,
+            "example": "peer0_1678033688086887124",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "by_snapshot_id",
+            "in": "query",
+            "description": "通过 SnapshotID 查询 Snapshot，1 或者 0，默认为 by_snapshot_id",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_timestamp_range",
+            "in": "query",
+            "description": "通过 InitTimestamp 或 FinalTimestamp 查询 Snapshot，1 或者 0",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_block_hash",
+            "in": "query",
+            "description": "通过 BlockHash 查询 Snapshot，1 或者 0",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_chain_info",
+            "in": "query",
+            "description": "通过 TargetChainID、TargetChainHeight 查询 Snapshot，1 或者 0。",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "snapshot_id",
+            "in": "query",
+            "description": "唯一 SnapshotID",
+            "required": false,
+            "example": "1678033688086215865-0-779363",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "left_timestamp",
+            "in": "query",
+            "description": "时间戳左边界，会返回 init_timestamp 大于该时间戳的 Snapshot，倒序返回",
+            "required": false,
+            "example": "1678033688086215865",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "right_timestamp",
+            "in": "query",
+            "description": "时间戳右边界，会返回 init_timestamp 小于该时间戳的 Snapshot，倒序返回。两个时间戳同时设置返回期间的 Snapshot，倒序返回",
+            "required": false,
+            "example": "1678033689827786222",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "block_hash",
+            "in": "query",
+            "description": "区块 Hash",
+            "required": false,
+            "example": "000000000000000000020c5db0b2e0542d5e2237de647277fe9c9d1d48244571",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "target_chain_id",
+            "in": "query",
+            "description": "链 ID，即 ForkHeight",
+            "required": false,
+            "example": "0",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "target_chain_height",
+            "in": "query",
+            "description": "链高度",
+            "required": false,
+            "example": "779363",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "返回的结果最大数目，默认为 20",
+            "required": false,
+            "example": "20",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_number",
+            "in": "query",
+            "description": "返回第几页的结果，默认为 1",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "title": "OK",
+                      "description": "是否查询成功"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "消息",
+                      "description": "返回的消息"
+                    },
+                    "number": {
+                      "type": "integer",
+                      "title": "数目",
+                      "description": "返回结果的数目"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Snapshot"
+                      },
+                      "title": "数据",
+                      "description": "返回的数据"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg",
+                    "number",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "minProperties": 0,
+                  "required": [
+                    "number",
+                    "ok",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "number": 1,
+                      "ok": true,
+                      "msg": "",
+                      "data": [
+                        {
+                          "snapshot_id": "1678033681989795313-0-779361",
+                          "target_chain_id": 0,
+                          "target_chain_height": 779361,
+                          "block_hash": "000000000000000000056014945229c2a4306f97fa069d234290e7135a324a48",
+                          "is_orphan": 0,
+                          "init_timestamp": "1678033681989795313",
+                          "final_timestamp": "1678033681991316625"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-68013224-run"
+      }
+    },
+    "/openapi/v1/best_state": {
+      "get": {
+        "summary": "BestState",
+        "x-apifox-folder": "openapi/v1",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "（1）本接口通过by_snapshot_id索引方式来查询BestStatus。\n（2）本接口支持指定snapshot_type过滤返回的BestStatus。",
+        "tags": [
+          "openapi/v1"
+        ],
+        "parameters": [
+          {
+            "name": "peer_tag",
+            "in": "query",
+            "description": "数据采集节点某一系列数据表的唯一标识，通过查询 peer 接口获取",
+            "required": true,
+            "example": "peer0_1678033688086887124",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "snapshot_id",
+            "in": "query",
+            "description": "归属的 SnapshotID",
+            "required": true,
+            "example": "1678033681989795313-0-779361",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "snapshot_type",
+            "in": "query",
+            "description": "Snapshot 的类型",
+            "required": false,
+            "example": "0",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "title": "OK",
+                      "description": "是否查询成功"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "消息",
+                      "description": "返回的消息"
+                    },
+                    "number": {
+                      "type": "integer",
+                      "title": "数目",
+                      "description": "返回结果的数目"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BestState"
+                      },
+                      "title": "数据",
+                      "description": "返回的数据"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg",
+                    "number",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "minProperties": 0,
+                  "required": [
+                    "number",
+                    "ok",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "number": 2,
+                      "ok": true,
+                      "msg": "",
+                      "data": [
+                        {
+                          "snapshot_id": "1678033681989795313-0-779361",
+                          "snapshot_type": 0,
+                          "best_block_hash": "000000000000000000044cdf37dd456471e0638740e9b2e4571b2bb1e7eab83c",
+                          "height": 779360,
+                          "bits": 386304419,
+                          "block_size": 2297915,
+                          "block_weight": 3998327,
+                          "num_txns": 2027,
+                          "total_txns": 811010169,
+                          "median_timestamp": "1677973492000000000"
+                        },
+                        {
+                          "snapshot_id": "1678033681989795313-0-779361",
+                          "snapshot_type": 1,
+                          "best_block_hash": "000000000000000000056014945229c2a4306f97fa069d234290e7135a324a48",
+                          "height": 779361,
+                          "bits": 386304419,
+                          "block_size": 387,
+                          "block_weight": 1440,
+                          "num_txns": 1,
+                          "total_txns": 811010170,
+                          "median_timestamp": "1677975019000000000"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-68013983-run"
+      }
+    },
+    "/openapi/v1/revision": {
+      "get": {
+        "summary": "Revision",
+        "x-apifox-folder": "openapi/v1",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "（1）本接口支持通过by_snapshot_id索引方式来查询属于某个Snapshot的全部Revision。\n（2）本接口支持指定revision_type和init_timestamp过滤返回的Revision。",
+        "tags": [
+          "openapi/v1"
+        ],
+        "parameters": [
+          {
+            "name": "peer_tag",
+            "in": "query",
+            "description": "数据采集节点某一系列数据表的唯一标识，通过查询 peer 接口获取",
+            "required": true,
+            "example": "peer0_1678033688086887124",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "snapshot_id",
+            "in": "query",
+            "description": "归属的 SnapshotID",
+            "required": true,
+            "example": "1678033681989795313-0-779361",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revision_type",
+            "in": "query",
+            "description": "Revision 类型，默认为空",
+            "required": false,
+            "example": "0",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "init_timestamp",
+            "in": "query",
+            "description": "Revision 最小起始时间戳，默认为空",
+            "required": false,
+            "example": "1678033681991314630",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "title": "OK",
+                      "description": "是否查询成功"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "消息",
+                      "description": "返回的消息"
+                    },
+                    "number": {
+                      "type": "integer",
+                      "title": "数目",
+                      "description": "返回结果的数目"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Revision"
+                      },
+                      "title": "数据",
+                      "description": "返回的数据"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg",
+                    "number",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "minProperties": 0,
+                  "required": [
+                    "number",
+                    "ok",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "number": 1,
+                      "ok": true,
+                      "msg": "",
+                      "data": [
+                        {
+                          "snapshot_id": "1678033681989795313-0-779361",
+                          "revision_type": 0,
+                          "init_timestamp": "1678033681989871653",
+                          "final_timestamp": "1678033681989872726",
+                          "init_data": {
+                            "peer_ip_addr": "182.100.67.50:8333",
+                            "miner_wallet_addr": "38XnPvu9PmonFU9WouPXUjYbW91wa5MerL"
+                          },
+                          "final_data": {
+                            "ok": true
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-68014804-run"
+      }
+    },
+    "/openapi/v1/event/orphan": {
+      "get": {
+        "summary": "Event_Orphan",
+        "x-apifox-folder": "openapi/v1",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "（1）本接口支持通过3种索引方式来查询EventOrphan，3种方式互斥。未设置索引方式时，默认采用by_snapshot_id。设置了多种方式时，按照优先级大小排序依次为by_snapshot_id，by_block_hash和by_parent_block_hash。\n（2）3种索引方式具有不同的查询参数，请查看下面的文档正确设置。\n（3）本接口支持指定event_type_orphan过滤返回的EventOrphan。",
+        "tags": [
+          "openapi/v1"
+        ],
+        "parameters": [
+          {
+            "name": "peer_tag",
+            "in": "query",
+            "description": "数据采集节点某一系列数据表的唯一标识，通过查询 peer 接口获取",
+            "required": true,
+            "example": "peer0_1678033688086887124",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "by_snapshot_id",
+            "in": "query",
+            "description": "通过 SnapshotID，EventTypeOrphan 查询 Event，1 或者 0",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_block_hash",
+            "in": "query",
+            "description": "通过 BlockHash 查询 Event，1 或者 0",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_parent_block_hash",
+            "in": "query",
+            "description": "通过 ParentBlockHash 查询 Event，1 或者 0，默认为 by_parent_block_hash",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "snapshot_id",
+            "in": "query",
+            "description": "归属的 SnapshotID",
+            "required": false,
+            "example": "1678033688086215865-0-779363",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "block_hash",
+            "in": "query",
+            "description": "孤儿区块的 Hash",
+            "required": false,
+            "example": "000000000000000000062721453ab5d0aedbb78e3633ed5c51becef3f4005a1d",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parent_block_hash",
+            "in": "query",
+            "description": "孤儿区块的父区块 Hash",
+            "required": false,
+            "example": "00000000000000000003d8fcb1e3f86e48454c4ce89d16dff4642150c6b2e457",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "event_type_orphan",
+            "in": "query",
+            "description": "EventOrphan 的事件类型",
+            "required": false,
+            "example": "0",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "title": "OK",
+                      "description": "是否查询成功"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "消息",
+                      "description": "返回的消息"
+                    },
+                    "number": {
+                      "type": "integer",
+                      "title": "数目",
+                      "description": "返回结果的数目"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EventOrphan"
+                      },
+                      "title": "数据",
+                      "description": "返回的数据"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg",
+                    "number",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "minProperties": 0,
+                  "required": [
+                    "number",
+                    "ok",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "number": 2,
+                      "ok": true,
+                      "msg": "",
+                      "data": [
+                        {
+                          "snapshot_id": "1678035273490384074--1--1",
+                          "event_type_orphan": 0,
+                          "orphan_parent_block_hash": "000000000000000000062721453ab5d0aedbb78e3633ed5c51becef3f4005a1d",
+                          "orphan_block_hash": "000000000000000000058b216e73c1cb1638b4e620f4cedd680bd2ef4760f6d4",
+                          "connect_main_chain": 0,
+                          "event_orphan_timestamp": "1678035273502195277"
+                        },
+                        {
+                          "snapshot_id": "1678035288041218726-0-779460",
+                          "event_type_orphan": 1,
+                          "orphan_parent_block_hash": "000000000000000000062721453ab5d0aedbb78e3633ed5c51becef3f4005a1d",
+                          "orphan_block_hash": "000000000000000000058b216e73c1cb1638b4e620f4cedd680bd2ef4760f6d4",
+                          "connect_main_chain": 1,
+                          "event_orphan_timestamp": "1678035299342421606"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-68015197-run"
+      }
+    },
+    "/openapi/v1/timeline": {
+      "get": {
+        "summary": "Timeline",
+        "x-apifox-folder": "openapi/v1",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "（1）本接口基于Snapshot接口实现，因此提供相同的查询方式，包括索引选择，参数设置和分页设置等。\n（2）本接口额外支持指定tags（必须），来获取多节点的Snapshot。\n（3）本接口会返回按照init_timestamp从小到大排序的Snapshot列表。\n（4）本接口返回的Snapshot只包含部分信息，并不完整，详情见下方文档。",
+        "tags": [
+          "openapi/v1"
+        ],
+        "parameters": [
+          {
+            "name": "peer_tag",
+            "in": "query",
+            "description": "数据采集节点某一系列数据表的唯一标识列表，通过查询 peer 接口获取",
+            "required": true,
+            "example": [
+              "peer0_1678033688086887124"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "by_snapshot_id",
+            "in": "query",
+            "description": "通过 SnapshotID 查询 Snapshot，1 或者 0，默认为 by_snapshot_id",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_timestamp_range",
+            "in": "query",
+            "description": "通过 InitTimestamp 或 FinalTimestamp 查询 Snapshot，1 或者 0",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_block_hash",
+            "in": "query",
+            "description": "通过 BlockHash 查询 Snapshot，1 或者 0",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "by_chain_info",
+            "in": "query",
+            "description": "通过 TargetChainID、TargetChainHeight、BlockHash 查询 Snapshot，1 或者 0。",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "snapshot_id",
+            "in": "query",
+            "description": "唯一 SnapshotID",
+            "required": false,
+            "example": "1678033688086215865-0-779363",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "left_timestamp",
+            "in": "query",
+            "description": "时间戳左边界，会返回 init_timestamp 大于该时间戳的 Snapshot，倒序返回",
+            "required": false,
+            "example": "1678033688086215865",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "right_timestamp",
+            "in": "query",
+            "description": "时间戳右边界，会返回 init_timestamp 小于该时间戳的 Snapshot，倒序返回。两个时间戳同时设置返回期间的 Snapshot，倒序返回",
+            "required": false,
+            "example": "1678033689827786222",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "block_hash",
+            "in": "query",
+            "description": "区块 Hash",
+            "required": false,
+            "example": "000000000000000000020c5db0b2e0542d5e2237de647277fe9c9d1d48244571",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "target_chain_id",
+            "in": "query",
+            "description": "链 ID，即 ForkHeight",
+            "required": false,
+            "example": "0",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "target_chain_height",
+            "in": "query",
+            "description": "链高度",
+            "required": false,
+            "example": "779363",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "返回的结果最大数目，默认为 20",
+            "required": false,
+            "example": "20",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page_number",
+            "in": "query",
+            "description": "返回第几页的结果，默认为 1",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "title": "OK",
+                      "description": "是否查询成功"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "title": "消息",
+                      "description": "返回的消息"
+                    },
+                    "number": {
+                      "type": "integer",
+                      "title": "数目",
+                      "description": "返回结果的数目"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/TimePoint"
+                      },
+                      "title": "数据",
+                      "description": "返回的数据"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg",
+                    "number",
+                    "data"
+                  ],
+                  "x-apifox-refs": {},
+                  "minProperties": 0,
+                  "required": [
+                    "number",
+                    "ok",
+                    "msg",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                },
+                "examples": {
+                  "1": {
+                    "summary": "成功示例",
+                    "value": {
+                      "number": 3,
+                      "ok": true,
+                      "msg": "",
+                      "data": [
+                        {
+                          "init_timestamp": "1678032736328169581",
+                          "final_timestamp": "1678032742947155075",
+                          "snapshot_id": "1678032736328169581-0-779455",
+                          "tag": "peer0.btcd.NAME.mainnet0"
+                        },
+                        {
+                          "init_timestamp": "1678033681989795313",
+                          "final_timestamp": "1678033681991316625",
+                          "snapshot_id": "1678033681989795313-0-779361",
+                          "tag": "peer1.btcd.EURO.mainnet0"
+                        },
+                        {
+                          "init_timestamp": "1678033682006822866",
+                          "final_timestamp": "1678033687989566556",
+                          "snapshot_id": "1678033682006822866-0-779362",
+                          "tag": "peer1.btcd.EURO.mainnet0"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-68018535-run"
+      }
+    },
+    "/openapi/v1/peer": {
+      "get": {
+        "summary": "Peer",
+        "x-apifox-folder": "openapi/v1",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "列出数据采集节点 peer 的全部 Table 信息用于查询数据（调用其他接口），可以设定 peer_tag  来过滤。",
+        "tags": [
+          "openapi/v1"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "description": "是否查询成功",
+                      "title": "OK"
+                    },
+                    "msg": {
+                      "type": "string",
+                      "description": "返回的消息",
+                      "title": "消息"
+                    },
+                    "number": {
+                      "type": "string",
+                      "description": "返回结果的数目",
+                      "title": "数目"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "返回的数据",
+                      "title": "数据"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg",
+                    "number",
+                    "data"
+                  ],
+                  "required": [
+                    "ok",
+                    "msg",
+                    "number",
+                    "data"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-75131290-run"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TimePoint": {
+        "type": "object",
+        "properties": {
+          "tag": {
+            "type": "string",
+            "description": "所属对等节点的唯一标识"
+          },
+          "snapshot_id": {
+            "type": "string",
+            "description": "Snapshot的唯一ID"
+          },
+          "init_timestamp": {
+            "type": "string",
+            "description": "Snapshot表示的区块同步过程的起始时间"
+          },
+          "final_timestamp": {
+            "type": "string",
+            "description": "Snapshot表示的区块同步过程的结束时间"
+          }
+        },
+        "x-apifox-orders": [
+          "tag",
+          "snapshot_id",
+          "init_timestamp",
+          "final_timestamp"
+        ],
+        "required": [
+          "init_timestamp",
+          "final_timestamp",
+          "snapshot_id",
+          "tag"
+        ],
+        "description": "某一区块同步过程所在的时间点",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "EventOrphan": {
+        "$comment": "JSON Schema for EventOrphan table",
+        "$id": "EventOrphan",
+        "title": "",
+        "type": "object",
+        "required": [
+          "snapshot_id",
+          "event_type_orphan",
+          "orphan_parent_block_hash",
+          "orphan_block_hash",
+          "connect_main_chain",
+          "event_orphan_timestamp"
+        ],
+        "properties": {
+          "snapshot_id": {
+            "$comment": "primary key",
+            "type": "string",
+            "maxLength": 35,
+            "minimum": 1,
+            "description": "所属Snapshot的唯一ID"
+          },
+          "event_type_orphan": {
+            "$comment": "primary key",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 127,
+            "description": "区块同步事件类型"
+          },
+          "orphan_parent_block_hash": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "孤儿区块的父块Hash"
+          },
+          "orphan_block_hash": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "孤儿区块Hash"
+          },
+          "connect_main_chain": {
+            "type": "integer",
+            "minimum": -128,
+            "maximum": 127,
+            "description": "孤儿区块是否上了主链"
+          },
+          "event_orphan_timestamp": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "区块同步事件的发生事件"
+          }
+        },
+        "x-apifox-orders": [
+          "snapshot_id",
+          "event_type_orphan",
+          "orphan_parent_block_hash",
+          "orphan_block_hash",
+          "connect_main_chain",
+          "event_orphan_timestamp"
+        ],
+        "description": "某一区块同步事件",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "Revision": {
+        "$comment": "JSON Schema for Revision table",
+        "$id": "Revision",
+        "title": "",
+        "type": "object",
+        "required": [
+          "snapshot_id",
+          "revision_type",
+          "init_timestamp",
+          "final_timestamp"
+        ],
+        "properties": {
+          "snapshot_id": {
+            "$comment": "primary key",
+            "type": "string",
+            "maxLength": 35,
+            "minimum": 1,
+            "description": "所属Snapshot的唯一ID"
+          },
+          "revision_type": {
+            "$comment": "primary key",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 256,
+            "description": "区块同步阶段类型"
+          },
+          "init_timestamp": {
+            "$comment": "primary key",
+            "type": "string",
+            "maxLength": 20,
+            "minimum": 1,
+            "description": "区块同步阶段的起始时间"
+          },
+          "final_timestamp": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "区块同步阶段的结束时间"
+          },
+          "init_data": {
+            "type": "string",
+            "default": null,
+            "description": "区块同步阶段起始时关注的自定义数据"
+          },
+          "final_data": {
+            "type": "string",
+            "default": null,
+            "description": "区块同步阶段结束时关注的自定义数据"
+          }
+        },
+        "x-apifox-orders": [
+          "snapshot_id",
+          "revision_type",
+          "init_timestamp",
+          "final_timestamp",
+          "init_data",
+          "final_data"
+        ],
+        "description": "某一区块同步阶段",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "BestState": {
+        "$comment": "JSON Schema for BestState table",
+        "$id": "BestState",
+        "title": "",
+        "type": "object",
+        "required": [
+          "snapshot_id",
+          "snapshot_type",
+          "best_block_hash",
+          "height",
+          "bits",
+          "block_size",
+          "block_weight",
+          "num_txns",
+          "total_txns",
+          "median_timestamp"
+        ],
+        "properties": {
+          "snapshot_id": {
+            "$comment": "primary key",
+            "type": "string",
+            "maxLength": 35,
+            "minimum": 1,
+            "description": "所属Snapshot的唯一ID"
+          },
+          "snapshot_type": {
+            "$comment": "primary key",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 127,
+            "description": "所属Snapshot的类型，Init或Final"
+          },
+          "best_block_hash": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "最优区块的Hash"
+          },
+          "height": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "最优区块的高度"
+          },
+          "bits": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967296,
+            "description": "最优区块的的计算难度"
+          },
+          "block_size": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709552000,
+            "description": "最优区块的大小"
+          },
+          "block_weight": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709552000,
+            "description": "最优区块的权重"
+          },
+          "num_txns": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709552000,
+            "description": "最优区块的交易数量"
+          },
+          "total_txns": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709552000,
+            "description": "最优链中的交易总数"
+          },
+          "median_timestamp": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "当前的中位数时间"
+          }
+        },
+        "x-apifox-orders": [
+          "snapshot_id",
+          "snapshot_type",
+          "best_block_hash",
+          "height",
+          "bits",
+          "block_size",
+          "block_weight",
+          "num_txns",
+          "total_txns",
+          "median_timestamp"
+        ],
+        "description": "某一时间点的区块链系统状态",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      },
+      "Snapshot": {
+        "$comment": "JSON Schema for snapshot_table table",
+        "$id": "snapshot_table",
+        "title": "",
+        "type": "object",
+        "required": [
+          "snapshot_id",
+          "target_chain_id",
+          "target_chain_height",
+          "block_hash",
+          "is_orphan",
+          "init_timestamp",
+          "final_timestamp"
+        ],
+        "properties": {
+          "snapshot_id": {
+            "$comment": "primary key",
+            "type": "string",
+            "maxLength": 35,
+            "minimum": 1,
+            "description": "Snapshot的唯一ID"
+          },
+          "target_chain_id": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "Snapshot所处链的编号"
+          },
+          "target_chain_height": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "Snapshot所对应区块的高度"
+          },
+          "block_hash": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Snapshot所对应区块的Hash"
+          },
+          "is_orphan": {
+            "type": "integer",
+            "minimum": -128,
+            "maximum": 127,
+            "description": "Snapshot所对应区块是否为孤块"
+          },
+          "init_timestamp": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "Snapshot表示的区块同步过程的起始时间"
+          },
+          "final_timestamp": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "Snapshot表示的区块同步过程的结束时间"
+          }
+        },
+        "x-apifox-orders": [
+          "snapshot_id",
+          "target_chain_id",
+          "target_chain_height",
+          "block_hash",
+          "is_orphan",
+          "init_timestamp",
+          "final_timestamp"
+        ],
+        "description": "某一区块同步过程",
+        "x-apifox-ignore-properties": [],
+        "x-apifox-folder": ""
+      }
+    }
+  },
+  "servers": []
+}
