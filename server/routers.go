@@ -94,6 +94,28 @@ var (
 			"/peer",
 			OpenapiV1PeerGet,
 		},
+
+		{
+			"OpenapiV1AuthRegisterPost",
+			http.MethodPost,
+			"/auth/register",
+			OpenapiV1AuthRegisterPost,
+		},
+
+		{
+			"OpenapiV1AuthTokenPost",
+			http.MethodPost,
+			"/auth/token",
+			OpenapiV1AuthTokenPost,
+		},
+
+		// 临时的，目前是 get
+		{
+			"OpenapiV1AuthTokenGet",
+			http.MethodGet,
+			"/auth/token",
+			OpenapiV1AuthTokenGet,
+		},
 	}
 )
 

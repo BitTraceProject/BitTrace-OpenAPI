@@ -37,6 +37,8 @@ var (
 	ErrParamInvalid = errors.New("error param invalid")
 	ErrParamNotSet  = errors.New("error param not set")
 	ErrQueryFailed  = errors.New("error query failed")
+	ErrUIDInvalid   = errors.New("error uid invalid")
+	ErrTokenInvalid = errors.New("error token invalid")
 	ErrUnknown      = errors.New("error unknown")
 )
 
@@ -60,6 +62,17 @@ func OpenapiV1SnapshotGet(c *gin.Context) {
 		c.JSON(respCode, *respPtr)
 	}()
 
+	token, ok := c.GetQuery("token")
+	if !ok || token == "" {
+		respPtr.Ok = false
+		respPtr.Msg = ErrParamNotSet.Error()
+		return
+	}
+	if !checkToken(token) {
+		respPtr.Ok = false
+		respPtr.Msg = ErrTokenInvalid.Error()
+		return
+	}
 	peerTag, ok := c.GetQuery("peer_tag")
 	if !ok || peerTag == "" {
 		respPtr.Ok = false
@@ -173,6 +186,17 @@ func OpenapiV1RevisionGet(c *gin.Context) {
 		c.JSON(respCode, *respPtr)
 	}()
 
+	token, ok := c.GetQuery("token")
+	if !ok || token == "" {
+		respPtr.Ok = false
+		respPtr.Msg = ErrParamNotSet.Error()
+		return
+	}
+	if !checkToken(token) {
+		respPtr.Ok = false
+		respPtr.Msg = ErrTokenInvalid.Error()
+		return
+	}
 	peerTag, ok := c.GetQuery("peer_tag")
 	if !ok || peerTag == "" {
 		respPtr.Ok = false
@@ -228,6 +252,17 @@ func OpenapiV1BestStateGet(c *gin.Context) {
 		c.JSON(respCode, *respPtr)
 	}()
 
+	token, ok := c.GetQuery("token")
+	if !ok || token == "" {
+		respPtr.Ok = false
+		respPtr.Msg = ErrParamNotSet.Error()
+		return
+	}
+	if !checkToken(token) {
+		respPtr.Ok = false
+		respPtr.Msg = ErrTokenInvalid.Error()
+		return
+	}
 	peerTag, ok := c.GetQuery("peer_tag")
 	if !ok || peerTag == "" {
 		respPtr.Ok = false
@@ -282,6 +317,17 @@ func OpenapiV1EventOrphanGet(c *gin.Context) {
 		c.JSON(respCode, *respPtr)
 	}()
 
+	token, ok := c.GetQuery("token")
+	if !ok || token == "" {
+		respPtr.Ok = false
+		respPtr.Msg = ErrParamNotSet.Error()
+		return
+	}
+	if !checkToken(token) {
+		respPtr.Ok = false
+		respPtr.Msg = ErrTokenInvalid.Error()
+		return
+	}
 	peerTag, ok := c.GetQuery("peer_tag")
 	if !ok || peerTag == "" {
 		respPtr.Ok = false
@@ -430,6 +476,17 @@ func OpenapiV1TimelineGet(c *gin.Context) {
 		c.JSON(respCode, *respPtr)
 	}()
 
+	token, ok := c.GetQuery("token")
+	if !ok || token == "" {
+		respPtr.Ok = false
+		respPtr.Msg = ErrParamNotSet.Error()
+		return
+	}
+	if !checkToken(token) {
+		respPtr.Ok = false
+		respPtr.Msg = ErrTokenInvalid.Error()
+		return
+	}
 	peerTagArray, ok := c.GetQueryArray("peer_tag")
 	if !ok || len(peerTagArray) == 0 {
 		respPtr.Ok = false
@@ -581,6 +638,17 @@ func OpenapiV1PeerGet(c *gin.Context) {
 		c.JSON(respCode, *respPtr)
 	}()
 
+	token, ok := c.GetQuery("token")
+	if !ok || token == "" {
+		respPtr.Ok = false
+		respPtr.Msg = ErrParamNotSet.Error()
+		return
+	}
+	if !checkToken(token) {
+		respPtr.Ok = false
+		respPtr.Msg = ErrTokenInvalid.Error()
+		return
+	}
 	peerData, err := QueryPeer()
 	if err != nil {
 		respPtr.Ok = false
@@ -708,4 +776,45 @@ func openapiV1SnapshotGet(c *gin.Context, peerTag string, indexType IndexType, p
 		respPtr.Msg = ErrUnknown.Error()
 	}
 	return
+}
+
+// OpenapiV1AuthRegisterPost TODO
+func OpenapiV1AuthRegisterPost(c *gin.Context) {
+
+}
+
+// OpenapiV1AuthTokenPost TODO
+func OpenapiV1AuthTokenPost(c *gin.Context) {
+
+}
+
+// OpenapiV1AuthTokenGet 目前暂时用这个
+func OpenapiV1AuthTokenGet(c *gin.Context) {
+	var (
+		respPtr = &model.ResponseAuthToken{
+			Ok:    false,
+			Msg:   "",
+			Token: "",
+		}
+		respCode = http.StatusOK
+	)
+	defer func() {
+		c.JSON(respCode, *respPtr)
+	}()
+
+	// TODO 目前使用 get 方式，后面要完成 post 方式
+	uid, ok := c.GetQuery("uid")
+	if !ok || uid == "" {
+		respPtr.Ok = false
+		respPtr.Msg = ErrParamNotSet.Error()
+		return
+	}
+	if !checkUid(uid) {
+		respPtr.Ok = false
+		respPtr.Msg = ErrUIDInvalid.Error()
+		return
+	}
+	token := newToken(uid)
+	respPtr.Ok = true
+	respPtr.Token = token
 }

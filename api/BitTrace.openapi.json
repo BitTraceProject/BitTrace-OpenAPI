@@ -11,6 +11,9 @@
     },
     {
       "name": "openapi/v1"
+    },
+    {
+      "name": "openapi/v1/Auth"
     }
   ],
   "paths": {
@@ -154,6 +157,16 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "接口访问 Token",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -271,6 +284,16 @@
             "example": "0",
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "接口访问 Token",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -412,6 +435,16 @@
             "description": "Revision 最小起始时间戳，默认为空",
             "required": false,
             "example": "1678033681991314630",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "接口访问 Token",
+            "required": true,
+            "example": "",
             "schema": {
               "type": "string"
             }
@@ -586,6 +619,16 @@
             "example": "0",
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "接口访问 Token",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -817,6 +860,16 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "接口访问 Token",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -914,7 +967,18 @@
         "tags": [
           "openapi/v1"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "接口访问 Token",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "成功",
@@ -966,6 +1030,149 @@
           }
         },
         "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-75131290-run"
+      }
+    },
+    "/openapi/v1/auth/token": {
+      "get": {
+        "summary": "Token",
+        "x-apifox-folder": "openapi/v1/Auth",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "获取接口访问 token",
+        "tags": [
+          "openapi/v1/Auth"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "x-apifox-orders": [
+                  "username",
+                  "password"
+                ],
+                "required": [
+                  "username",
+                  "password"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg",
+                    "token"
+                  ],
+                  "required": [
+                    "ok",
+                    "msg",
+                    "token"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-80887170-run"
+      }
+    },
+    "/openapi/v1/auth/register": {
+      "get": {
+        "summary": "Register",
+        "x-apifox-folder": "openapi/v1/Auth",
+        "x-apifox-status": "developing",
+        "deprecated": false,
+        "description": "获取接口访问 token",
+        "tags": [
+          "openapi/v1/Auth"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "x-apifox-orders": [
+                  "username",
+                  "password"
+                ],
+                "required": [
+                  "username",
+                  "password"
+                ],
+                "x-apifox-ignore-properties": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  },
+                  "x-apifox-orders": [
+                    "ok",
+                    "msg"
+                  ],
+                  "required": [
+                    "ok",
+                    "msg"
+                  ],
+                  "x-apifox-ignore-properties": []
+                }
+              }
+            }
+          }
+        },
+        "x-run-in-apifox": "https://www.apifox.cn/web/project/2429921/apis/api-80887873-run"
       }
     }
   },
